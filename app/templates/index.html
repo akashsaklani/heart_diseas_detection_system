@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f3f8fc">
+  <title>CardioCheck · Heart health insights</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  {% macro bounds(name) -%}
+    {%- for field in fields if field.name == name -%}
+      min="{{ field.min }}" max="{{ field.max }}"
+    {%- endfor -%}
+  {%- endmacro %}
+
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="site-header">
+    <nav class="nav-shell" aria-label="Main navigation">
+      <a class="brand" href="/" aria-label="CardioCheck home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 40 40" focusable="false">
+            <path d="M20 33.2 7.3 21.1a8 8 0 0 1 11.3-11.3L20 11.2l1.4-1.4a8 8 0 0 1 11.3 11.3L20 33.2Z" />
+            <path class="pulse-line" d="M8.8 20h6l2.2-4.2 4.1 9 2.8-5h7.3" />
+          </svg>
+        </span>
+        <span>Cardio<span class="brand-accent">Check</span></span>
+      </a>
+      <a class="nav-link" href="#how-it-works">How it works</a>
+    </nav>
+  </header>
+
+  <main id="main-content" class="page-shell">
+    <section class="hero" aria-labelledby="page-title">
+      <div class="hero-copy">
+        <span class="eyebrow"><span class="eyebrow-dot"></span> A clearer view of your heart health</span>
+        <h1 id="page-title">Understand the signals.<br><span>Start a conversation.</span></h1>
+        <p>Enter a few health measurements to get an educational estimate based on the details you share.</p>
+        <div class="privacy-note">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2.5 3.5 5v4.4c0 4 2.8 6.8 6.5 8.1 3.7-1.3 6.5-4.1 6.5-8.1V5L10 2.5Zm-1 10.1-2.2-2.2 1.1-1.1L9 10.4l3.2-3.2 1.1 1.1-4.3 4.3Z"/></svg>
+          <span>Your entries are used for this prediction only.</span>
+        </div>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <div class="art-orbit orbit-one"></div>
+        <div class="art-orbit orbit-two"></div>
+        <div class="heart-illustration">
+          <svg viewBox="0 0 180 180" focusable="false">
+            <path class="heart-shape" d="M90 153 29 94C-4 61 43 12 77 45l13 13 13-13c34-33 81 16 48 49l-61 59Z"/>
+            <path class="heart-beat" d="M31 91h31l13-24 21 49 16-31h37"/>
+          </svg>
+        </div>
+        <span class="art-caption">Small steps. Better questions.</span>
+      </div>
+    </section>
+
+    <section class="workspace" aria-label="Prediction workspace">
+      <form id="prediction-form" class="form-card" novalidate>
+        <div class="section-heading">
+          <div>
+            <span class="section-kicker">YOUR DETAILS</span>
+            <h2>Health snapshot</h2>
+          </div>
+          <span class="required-note"><span aria-hidden="true">*</span> Required</span>
+        </div>
+
+        <fieldset class="field-group">
+          <legend>
+            <span class="group-icon" aria-hidden="true">01</span>
+            <span><strong>Personal</strong><small>A little about you</small></span>
+          </legend>
+          <div class="fields-grid">
+            <div class="field-block">
+              <label class="field-label" for="age">Age <span class="required-star" aria-hidden="true">*</span></label>
+              <span class="field-hint">Age in years</span>
+              <div class="range-control">
+                <input id="age" name="age" type="range" {{ bounds('age') }} step="1" value="55" required aria-describedby="age-value age-error">
+                <div class="editable-value">
+                  <input id="age-number" class="range-value-number" data-field="age" type="number" {{ bounds('age') }} step="1" value="55" inputmode="numeric" aria-label="Age in years" aria-describedby="age-value age-error">
+                  <span class="value-unit">years</span>
+                </div>
+              </div>
+              <output id="age-value" class="visually-hidden" for="age">55</output>
+              <span id="age-error" class="field-error" aria-live="polite"></span>
+            </div>
+            <div class="field-block">
+              <label class="field-label" for="sex">Sex <span class="required-star" aria-hidden="true">*</span>
+                <span class="tip" tabindex="0" role="img" aria-label="Choose the option that applies to you." title="Choose the option that applies to you.">i</span>
+              </label>
+              <span class="field-hint">Choose one</span>
+              <select id="sex" name="sex" required aria-describedby="sex-error">
+                <option value="1" selected>Male</option>
+                <option value="0">Female</option>
+              </select>
+              <span id="sex-error" class="field-error" aria-live="polite"></span>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="field-group">
+          <legend>
+            <span class="group-icon" aria-hidden="true">02</span>
+            <span><strong>Vitals</strong><small>Measurements and readings</small></span>
+          </legend>
+          <div class="fields-grid">
+            <div class="field-block">
+              <label class="field-label" for="trestbps">Resting blood pressure (BP) <span class="required-star" aria-hidden="true">*</span><span class="medical-term">blood pressure at rest</span></label>
+              <span class="field-hint">Use the reading from your records</span>
+              <div class="range-control">
+                <input id="trestbps" name="trestbps" type="range" {{ bounds('trestbps') }} step="1" value="120" required aria-describedby="trestbps-value trestbps-error">
+                <div class="editable-value">
+                  <input id="trestbps-number" class="range-value-number" data-field="trestbps" type="number" {{ bounds('trestbps') }} step="1" value="120" inputmode="numeric" aria-label="Resting blood pressure in millimeters of mercury" aria-describedby="trestbps-value trestbps-error">
+                  <span class="value-unit">mmHg</span>
+                </div>
+              </div>
+              <output id="trestbps-value" class="visually-hidden" for="trestbps">120</output>
+              <span id="trestbps-error" class="field-error" aria-live="polite"></span>
+            </div>
+            <div class="field-block">
+              <label class="field-label" for="chol">Cholesterol <span class="required-star" aria-hidden="true">*</span><span class="medical-term">blood cholesterol</span></label>
+              <span class="field-hint">Use the reading from your records</span>
+              <div class="range-control">
+                <input id="chol" name="chol" type="range" {{ bounds('chol') }} step="1" value="200" required aria-describedby="chol-value chol-error">
+                <div class="editable-value">
+                  <input id="chol-number" class="range-value-number" data-field="chol" type="number" {{ bounds('chol') }} step="1" value="200" inputmode="numeric" aria-label="Cholesterol in milligrams per deciliter" aria-describedby="chol-value chol-error">
+                  <span class="value-unit">mg/dl</span>
+                </div>
+              </div>
+              <output id="chol-value" class="visually-hidden" for="chol">200</output>
+              <span id="chol-error" class="field-error" aria-live="polite"></span>
+            </div>
+            <div class="field-block">
+              <label class="field-label" for="thalach">Highest heart rate during exercise <span class="required-star" aria-hidden="true">*</span><span class="medical-term">maximum heart rate</span></label>
+              <span class="field-hint">Beats per minute</span>
+              <div class="range-control">
+                <input id="thalach" name="thalach" type="range" {{ bounds('thalach') }} step="1" value="150" required aria-describedby="thalach-value thalach-error">
+                <div class="editable-value">
+                  <input id="thalach-number" class="range-value-number" data-field="thalach" type="number" {{ bounds('thalach') }} step="1" value="150" inputmode="numeric" aria-label="Highest heart rate during exercise in beats per minute" aria-describedby="thalach-value thalach-error">
+                  <span class="value-unit">bpm</span>
+                </div>
+              </div>
+              <output id="thalach-value" class="visually-hidden" for="thalach">150</output>
+              <span id="thalach-error" class="field-error" aria-live="polite"></span>
+            </div>
+            <div class="field-block">
+              <label class="field-label" for="fbs">Blood sugar after fasting above 120 <span class="required-star" aria-hidden="true">*</span><span class="medical-term">fasting blood sugar</span></label>
+              <span class="field-hint">Was it above 120 mg/dl?</span>
+              <select id="fbs" name="fbs" required aria-describedby="fbs-error">
+                <option value="0" selected>No</option>
+                <option value="1">Yes</option>
+              </select>
+              <span id="fbs-error" class="field-error" aria-live="polite"></span>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="field-group">
+          <legend>
+            <span class="group-icon" aria-hidden="true">03</span>
+            <span><strong>Heart tests</strong><small>Clinical test observations</small></span>
+          </legend>
+          <div class="fields-grid">
+            <div class="field-block">
+              <label class="field-label" for="cp">Chest pain type <span class="required-star" aria-hidden="true">*</span></label>
+              <span class="field-hint">Choose the closest description</span>
+              <select id="cp" name="cp" required aria-describedby="cp-error">
+                <option value="0" selected>Pain when active, relieved by rest (Typical angina)</option>
+                <option value="1">Pain that may feel unusual (Atypical angina)</option>
+                <option value="2">Pain not related to the heart (Non-anginal pain)</option>
+                <option value="3">No chest pain (Asymptomatic)</option>
+              </select>
+              <span id="cp-error" class="field-error" aria-live="polite"></span>
+            </div>
+            <div class="field-block">
+              <label class="field-label" for="restecg">What did your resting ECG show? <span class="required-star" aria-hidden="true">*</span><span class="medical-term">heart tracing at rest</span></label>
+              <span class="field-hint report-helper">Take this from your ECG / stress test report. If you don't know, ask your doctor.</span>
+              <select id="restecg" name="restecg" required aria-describedby="restecg-error">
+                <option value="0" selected>Normal</option>
+                <option value="1">Some changes in the heart's electrical pattern (ST-T abnormality)</option>
+                <option value="2">Signs of a larger heart chamber (LV hypertrophy)</option>
+              </select>
+              <span id="restecg-error" class="field-error" aria-live="polite"></span>
+            </div>
+            <div class="field-block">
+              <label class="field-label" for="exang">Chest pain during exercise <span class="required-star" aria-hidden="true">*</span><span class="medical-term">exercise-induced angina</span></label>
+              <span class="field-hint">Did it happen during exercise?</span>
+              <select id="exang" name="exang" required aria-describedby="exang-error">
+                <option value="0" selected>No</option>
+                <option value="1">Yes</option>
+              </select>
+              <span id="exang-error" class="field-error" aria-live="polite"></span>
+            </div>
+            <div class="field-block">
+              <label class="field-label" for="oldpeak">ST depression (oldpeak) - from your ECG report <span class="required-star" aria-hidden="true">*</span></label>
+              <span class="field-hint report-helper">Take this from your ECG / stress test report. If you don't know, ask your doctor.</span>
+              <div class="range-control">
+                <input id="oldpeak" name="oldpeak" type="range" {{ bounds('oldpeak') }} step="0.1" value="0.5" required aria-describedby="oldpeak-value oldpeak-error">
+                <div class="editable-value">
+                  <input id="oldpeak-number" class="range-value-number" data-field="oldpeak" type="number" {{ bounds('oldpeak') }} step="0.1" value="0.5" inputmode="decimal" aria-label="ST depression, from your ECG report" aria-describedby="oldpeak-value oldpeak-error">
+                  <span class="value-unit">value</span>
+                </div>
+              </div>
+              <output id="oldpeak-value" class="visually-hidden" for="oldpeak">0.5</output>
+              <span id="oldpeak-error" class="field-error" aria-live="polite"></span>
+            </div>
+            <div class="field-block">
+              <label class="field-label" for="slope">Slope of ST segment - from your ECG report <span class="required-star" aria-hidden="true">*</span></label>
+              <span class="field-hint report-helper">Take this from your ECG / stress test report. If you don't know, ask your doctor.</span>
+              <select id="slope" name="slope" required aria-describedby="slope-error">
+                <option value="0">Going up (Upsloping)</option>
+                <option value="1" selected>Flat (Flat)</option>
+                <option value="2">Going down (Downsloping)</option>
+              </select>
+              <span id="slope-error" class="field-error" aria-live="polite"></span>
+            </div>
+          </div>
+        </fieldset>
+
+        <div class="form-actions">
+          <button class="button button-primary" id="predict-button" type="submit">
+            <span class="button-label">Get my estimate</span>
+            <span class="spinner" aria-hidden="true"></span>
+            <svg class="button-arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12m-5-5 5 5-5 5"/></svg>
+          </button>
+          <div class="secondary-actions">
+            <button class="button button-quiet" id="sample-button" type="button">Fill sample</button>
+            <button class="button button-quiet" id="reset-button" type="reset">Reset</button>
+          </div>
+        </div>
+      </form>
+
+      <aside class="result-card" id="result-panel" aria-labelledby="result-title" aria-live="polite" aria-atomic="false">
+        <div class="view-toggle" role="group" aria-label="Choose result view">
+          <button class="view-toggle-button is-selected" id="patient-view-button" type="button" aria-pressed="true">Patient view</button>
+          <button class="view-toggle-button" id="technical-view-button" type="button" aria-pressed="false">Technical view</button>
+        </div>
+        <div class="result-heading">
+          <span class="section-kicker">YOUR ESTIMATE</span>
+          <h2 id="result-title">Heart health estimate</h2>
+          <p>A guide to help you decide what to discuss with your doctor.</p>
+        </div>
+
+        <div id="result-empty" class="empty-state">
+          <div class="empty-visual" aria-hidden="true">
+            <div class="empty-circle"><svg viewBox="0 0 64 64"><path d="M32 54 11.5 34A13 13 0 0 1 30 15.7l2 2 2-2A13 13 0 0 1 52.5 34L32 54Z"/><path d="M13 32h12l4-7 7 15 5-8h10"/></svg></div>
+          </div>
+          <h3>Your result will appear here</h3>
+          <p>Complete the details and select <strong>Get my estimate</strong> to see your result.</p>
+          <div class="empty-footnote"><span aria-hidden="true">✦</span> This is an educational estimate, not a diagnosis.</div>
+        </div>
+
+        <div id="result-error" class="alert-card" role="alert" hidden>
+          <span class="alert-icon" aria-hidden="true">!</span>
+          <div>
+            <h3 id="error-title">We couldn't make an estimate</h3>
+            <p id="error-message"></p>
+            <p id="error-detail" class="error-detail" hidden></p>
+          </div>
+        </div>
+
+        <div id="result-content" class="result-view-stack" hidden>
+        <div id="patient-view-content" class="view-pane patient-view" aria-hidden="true" inert>
+          <div class="patient-outcome is-low" id="patient-outcome">
+            <span class="patient-result-label" id="patient-result-label">Lower chance</span>
+            <h3 id="patient-headline">Lower chance of heart problems</h3>
+            <p id="patient-summary">Based on the details you entered, the system sees a lower chance of heart problems. This is not a diagnosis.</p>
+          </div>
+
+          <div class="chance-meter" role="img" id="chance-meter" aria-label="Likelihood range: Low">
+            <div class="meter-track"><span id="meter-marker" class="meter-marker"></span></div>
+            <div class="meter-labels"><span>Low</span><span>Moderate</span><span>High</span></div>
+          </div>
+
+          <section class="patient-info-box" aria-labelledby="meaning-title">
+            <h3 id="meaning-title">What this means for you</h3>
+            <ul>
+              <li>This is only a screening estimate, not a diagnosis.</li>
+              <li>A doctor can give the real answer with proper tests, such as an ECG and blood tests.</li>
+              <li>If you have chest pain, breathlessness or dizziness, seek medical help right away.</li>
+            </ul>
+          </section>
+          <section class="patient-info-box next-steps" aria-labelledby="next-steps-title">
+            <h3 id="next-steps-title">What you can do next</h3>
+            <ul>
+              <li>Talk to a doctor about this result.</li>
+              <li>Keep a record of your BP, cholesterol and sugar readings.</li>
+              <li>Do not start or stop any medicine because of this result.</li>
+            </ul>
+          </section>
+
+          <section class="details-section" aria-labelledby="details-title">
+            <h3 id="details-title">Your details</h3>
+            <dl class="details-grid">
+              <div><dt>Age</dt><dd id="detail-age">—</dd></div>
+              <div><dt>Sex</dt><dd id="detail-sex">—</dd></div>
+              <div><dt>Chest pain type</dt><dd id="detail-cp">—</dd></div>
+              <div><dt>Resting blood pressure</dt><dd id="detail-trestbps">—</dd></div>
+              <div><dt>Cholesterol</dt><dd id="detail-chol">—</dd></div>
+              <div><dt>Blood sugar after fasting</dt><dd id="detail-fbs">—</dd></div>
+              <div><dt>Heart tracing at rest</dt><dd id="detail-restecg">—</dd></div>
+              <div><dt>Highest heart rate during exercise</dt><dd id="detail-thalach">—</dd></div>
+              <div><dt>Chest pain during exercise</dt><dd id="detail-exang">—</dd></div>
+              <div><dt>ST depression (ECG reading)</dt><dd id="detail-oldpeak">—</dd></div>
+              <div><dt>Direction of the heart signal during exercise</dt><dd id="detail-slope">—</dd></div>
+            </dl>
+          </section>
+          <div class="result-disclaimer">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2.5 3.5 5v4.4c0 4 2.8 6.8 6.5 8.1 3.7-1.3 6.5-4.1 6.5-8.1V5L10 2.5Zm0 4v4m0 2.5h.01"/></svg>
+            <p>{{ disclaimer }}</p>
+          </div>
+        </div>
+
+        <div id="technical-view-content" class="view-pane technical-view" aria-hidden="true" inert>
+          <div class="probability-summary">
+            <div class="probability-ring" role="progressbar" aria-label="Class 1 model probability" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+              <svg viewBox="0 0 120 120" aria-hidden="true">
+                <circle class="ring-track" cx="60" cy="60" r="48"></circle>
+                <circle class="ring-progress" id="ring-progress" cx="60" cy="60" r="48"></circle>
+              </svg>
+              <div class="ring-label"><strong id="probability-value">0%</strong><span>class 1</span></div>
+            </div>
+            <div class="prediction-copy">
+              <span id="prediction-badge" class="prediction-badge"></span>
+              <h3 id="prediction-label"></h3>
+              <p>Model probability for class 1</p>
+            </div>
+          </div>
+          <div class="probability-breakdown" aria-label="Class probabilities">
+            <div class="probability-row">
+              <div class="probability-meta"><span><i class="legend-dot class-zero"></i>Class 0</span><strong id="class-0-value">0%</strong></div>
+              <div class="bar-track"><span id="class-0-bar" class="bar-fill class-zero"></span></div>
+            </div>
+            <div class="probability-row">
+              <div class="probability-meta"><span><i class="legend-dot class-one"></i>Class 1</span><strong id="class-1-value">0%</strong></div>
+              <div class="bar-track"><span id="class-1-bar" class="bar-fill class-one"></span></div>
+            </div>
+          </div>
+          <p class="technical-note">Random Forest, 100 trees, trained on the heart disease dataset.</p>
+          <div class="result-disclaimer">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2.5 3.5 5v4.4c0 4 2.8 6.8 6.5 8.1 3.7-1.3 6.5-4.1 6.5-8.1V5L10 2.5Zm0 4v4m0 2.5h.01"/></svg>
+            <p>{{ disclaimer }}</p>
+          </div>
+        </div>
+        </div>
+        <div class="result-footnote"><span class="status-dot"></span> Educational estimate only · Not a diagnosis</div>
+      </aside>
+    </section>
+
+    <section id="how-it-works" class="how-section" aria-labelledby="how-title">
+      <div class="how-heading">
+        <span class="section-kicker">SIMPLE BY DESIGN</span>
+        <h2 id="how-title">How it works</h2>
+        <p>A quick, three-step look at what happens behind your estimate.</p>
+      </div>
+      <div class="steps-grid">
+        <article class="step-card">
+          <span class="step-number">01</span>
+          <div class="step-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 3v3m10-3v3M4 9h16M6 5h12a2 2 0 0 1 2 2v12H4V7a2 2 0 0 1 2-2Zm2 8h3m-3 3h7"/></svg></div>
+          <h3>Share your snapshot</h3>
+          <p>Enter the measurements and test observations you have available.</p>
+        </article>
+        <article class="step-card">
+          <span class="step-number">02</span>
+          <div class="step-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 19V5m0 14h16M7 15l4-4 3 2 5-6m-3 0h3v3"/></svg></div>
+          <h3>Your details are reviewed</h3>
+          <p>The system uses the information you shared to prepare a simple estimate.</p>
+        </article>
+        <article class="step-card">
+          <span class="step-number">03</span>
+          <div class="step-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21s8-4 8-11V5l-8-3-8 3v5c0 7 8 11 8 11Zm-3-9 2 2 4-4"/></svg></div>
+          <h3>Review the estimate</h3>
+          <p>Use the result as an educational starting point, never a diagnosis.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <a class="brand footer-brand" href="/" aria-label="CardioCheck home">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 40 40" focusable="false"><path d="M20 33.2 7.3 21.1a8 8 0 0 1 11.3-11.3L20 11.2l1.4-1.4a8 8 0 0 1 11.3 11.3L20 33.2Z"/><path class="pulse-line" d="M8.8 20h6l2.2-4.2 4.1 9 2.8-5h7.3"/></svg></span>
+        <span>Cardio<span class="brand-accent">Check</span></span>
+      </a>
+      <p>{{ disclaimer }}</p>
+    </div>
+  </footer>
+  <script src="{{ url_for('static', filename='app.js') }}" defer></script>
+</body>
+</html>
